@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NearU - 가까운 직장인 소개</title>
+<style>
+:root{
+  --bg:#f7f7fa;
+  --surface:#ffffff;
+  --surface-2:#fbfbfd;
+  --text:#1e1f24;
+  --muted:#7a7d86;
+  --line:#e9eaf0;
+  --primary:#ff5c7a;
+  --primary-dark:#e64967;
+  --primary-soft:#fff0f4;
+  --accent:#7c6cff;
+  --success:#2eaf75;
+  --warning:#f2a93b;
+  --danger:#df5858;
+  --shadow:0 18px 45px rgba(26,29,39,.07);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter, Pretendard, "Noto Sans KR", Arial, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255,92,122,.08), transparent 30%),
+    radial-gradient(circle at 100% 20%, rgba(124,108,255,.06), transparent 24%),
+    var(--bg);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.55}
+
+.app{
+  width:min(1220px,100%);
+  min-height:100vh;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:250px minmax(0,1fr);
+}
+.sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  padding:26px 18px;
+  border-right:1px solid rgba(232,233,239,.95);
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(16px);
+  z-index:20;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:4px 8px 20px;
+}
+.brand-mark{
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--primary),#ff8aa1);
+  color:#fff;font-size:22px;
+  box-shadow:0 10px 22px rgba(255,92,122,.24);
+}
+.brand-copy strong{display:block;font-size:25px;letter-spacing:-1px}
+.brand-copy strong span{color:var(--primary)}
+.brand-copy small{color:var(--muted);font-size:11px}
+.nav{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.nav button{
+  width:100%;
+  display:flex;align-items:center;gap:11px;
+  border:0;background:transparent;color:#585b64;
+  padding:12px 13px;border-radius:14px;text-align:left;font-weight:800;
+  transition:.18s ease;
+}
+.nav button .icon{width:22px;text-align:center;font-size:17px}
+.nav button:hover,.nav button.active{background:var(--primary-soft);color:var(--primary)}
+.side-card{
+  position:absolute;left:18px;right:18px;bottom:20px;
+  padding:15px;border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(145deg,#fff,#fff7f9);
+  color:#777;font-size:12px;line-height:1.55;
+}
+.side-card b{display:block;color:#444;margin-bottom:5px}
+
+.main{min-width:0;padding:30px 32px 44px}
+.page{display:none;animation:fade .22s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:.3;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px;
+}
+.title h1{font-size:30px;line-height:1.2;letter-spacing:-1.1px;margin:0}
+.title p{margin:7px 0 0;color:var(--muted);line-height:1.5}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line);background:#fff;border-radius:999px;
+  padding:8px 11px;color:#666;font-size:12px;font-weight:800;white-space:nowrap;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+.card{
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+/* HOME */
+.hero{
+  min-height:565px;
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);gap:20px;
+}
+.hero-main{
+  position:relative;overflow:hidden;padding:48px;
+  background:
+    radial-gradient(circle at 88% 16%,rgba(255,255,255,.78),transparent 22%),
+    linear-gradient(145deg,#fff 0%,#fff4f7 60%,#f7f3ff 100%);
+}
+.hero-main::after{
+  content:"";position:absolute;width:260px;height:260px;border-radius:50%;
+  right:-95px;bottom:-115px;background:rgba(255,92,122,.08);
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 11px;
+  border-radius:999px;background:#fff;border:1px solid #f3d8df;
+  color:var(--primary);font-size:12px;font-weight:900;
+}
+.hero-main h2{font-size:48px;line-height:1.14;letter-spacing:-2.3px;margin:24px 0 18px;max-width:660px}
+.hero-main p{font-size:17px;line-height:1.72;color:#656873;max-width:620px;margin:0}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.btn{
+  border:0;border-radius:14px;padding:12px 17px;font-weight:900;transition:.18s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--primary);color:#fff;box-shadow:0 10px 22px rgba(255,92,122,.22)}
+.btn.primary:hover{background:var(--primary-dark)}
+.btn.dark{background:#202127;color:#fff}
+.btn.ghost{background:#f3f4f7;color:#333}
+.btn.soft{background:var(--primary-soft);color:var(--primary)}
+.btn.danger{background:#fff1f1;color:var(--danger)}
+.hero-foot{
+  position:absolute;left:48px;right:48px;bottom:42px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.hero-stat{padding:13px 14px;border-radius:15px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.85)}
+.hero-stat b{display:block;font-size:18px;margin-bottom:3px}
+.hero-stat span{font-size:11px;color:#777}
+
+.hero-side{padding:24px;display:flex;flex-direction:column;gap:12px}
+.hero-side h3{font-size:16px;margin:2px 0 6px}
+.flow-step{display:flex;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.flow-num{width:35px;height:35px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--primary-soft);color:var(--primary);font-weight:900;flex:none}
+.flow-step b{display:block;font-size:14px}
+.flow-step span{display:block;margin-top:3px;color:#888;font-size:12px}
+.trust-note{margin-top:auto;padding:14px;border-radius:15px;background:#f7f8fb;color:#73757e;font-size:12px;line-height:1.55}
+
+/* PROFILE */
+.layout-2{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px}
+.form-card{padding:24px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.section-head h3{margin:0;font-size:18px}
+.section-head span{font-size:12px;color:#999}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-size:12px;color:#555;font-weight:900}
+input,select,textarea{
+  width:100%;border:1px solid #dfe1e7;background:#fff;color:#292a30;
+  border-radius:13px;padding:12px 13px;outline:none;transition:.16s ease;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(255,92,122,.08)}
+textarea{min-height:96px;resize:vertical}
+.interest-wrap{display:flex;gap:8px;flex-wrap:wrap}
+.interest-check{display:none}
+.interest-label{
+  display:inline-flex;padding:8px 11px;border:1px solid var(--line);border-radius:999px;
+  background:#fff;color:#666;font-size:12px;font-weight:800;cursor:pointer;transition:.16s ease;
+}
+.interest-check:checked + .interest-label{background:var(--primary-soft);color:var(--primary);border-color:#ffd6df}
+.upload-box{display:flex;align-items:center;gap:12px;padding:13px;border:1px dashed #d9dbe2;border-radius:16px;background:#fbfbfc}
+.upload-thumb{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#ffd4dd,#eee7ff);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;flex:none}
+.upload-thumb img{width:100%;height:100%;object-fit:cover}
+.upload-box small{display:block;color:#92949c;line-height:1.5;margin-top:3px}
+.preview-card{padding:20px;align-self:start;position:sticky;top:28px}
+.preview-photo{height:310px;border-radius:18px;background:linear-gradient(135deg,#ffd7df,#e7ddff);display:flex;align-items:center;justify-content:center;font-size:94px;overflow:hidden}
+.preview-photo img{width:100%;height:100%;object-fit:cover}
+.preview-card h2{font-size:27px;margin:18px 0 7px}
+.preview-sub{color:#70727b;font-size:14px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+.tag{padding:7px 10px;border-radius:999px;background:#f3f4f7;color:#60636b;font-size:11px;font-weight:800}
+.preview-intro{margin:16px 0 0;color:#62656d;line-height:1.65;font-size:14px}
+
+/* DISCOVER */
+.discover-grid{display:grid;grid-template-columns:minmax(0,570px) minmax(270px,1fr);gap:20px}
+.person-card{overflow:hidden}
+.person-photo{
+  position:relative;height:410px;display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 28% 20%,rgba(255,255,255,.65),transparent 22%),
+    linear-gradient(145deg,#ffd9e1,#f4c6d1 46%,#d9ccff);
+  font-size:118px;
+}
+.person-photo::after{content:"";position:absolute;inset:auto 0 0;height:36%;background:linear-gradient(transparent,rgba(0,0,0,.23));pointer-events:none}
+.online-chip{position:absolute;top:18px;left:18px;z-index:2;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.9);font-size:11px;font-weight:900;color:#555}
+.match-score{position:absolute;right:18px;top:18px;z-index:2;padding:8px 10px;border-radius:12px;background:rgba(32,33,39,.88);color:#fff;font-size:11px;font-weight:900}
+.person-body{padding:22px}
+.person-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.person-body h2{font-size:29px;margin:0}
+.verify{font-size:12px;color:var(--success);font-weight:900}
+.person-body p{color:#656872;line-height:1.65;font-size:14px;margin:15px 0 0}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.info-box{padding:11px;border-radius:14px;background:#f7f8fa}
+.info-box small{display:block;color:#9799a1;font-size:10px;margin-bottom:4px}
+.info-box b{font-size:12px}
+.actions{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;margin-top:18px}
+.actions button{border:0;border-radius:14px;padding:14px 12px;font-weight:900}
+.actions .pass{background:#f0f1f4;color:#555}
+.actions .like{background:var(--primary);color:#fff}
+.discover-side{display:flex;flex-direction:column;gap:14px}
+.side-section{padding:20px}
+.side-section h3{margin:0 0 14px;font-size:16px}
+.recommend-row{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.recommend-row:last-child{border-bottom:0}
+.recommend-row span{color:#858791;font-size:12px}
+.recommend-row b{font-size:12px;text-align:right}
+.tip{padding:14px;border-radius:15px;background:#fff8ea;color:#79633f;font-size:12px;line-height:1.55}
+
+/* MATCH */
+.match-card{text-align:center;padding:48px 24px;position:relative;overflow:hidden}
+.match-card::before,.match-card::after{content:"";position:absolute;border-radius:50%;background:rgba(255,92,122,.07)}
+.match-card::before{width:220px;height:220px;left:-85px;top:-95px}
+.match-card::after{width:240px;height:240px;right:-100px;bottom:-110px}
+.heart{font-size:70px}
+.match-card h2{font-size:34px;margin:10px 0 8px}
+.match-card p{color:#6f727b;margin:0}
+.match-pair{display:flex;justify-content:center;gap:18px;margin:28px 0}
+.match-avatar{width:98px;height:98px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffd5de,#e7deff);font-size:42px;border:5px solid #fff;box-shadow:0 10px 24px rgba(30,32,40,.12)}
+.match-hint{max-width:540px;margin:0 auto 20px;padding:13px;border-radius:14px;background:#f8f8fa;color:#7a7d86;font-size:12px;line-height:1.55}
+.center-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+
+/* CHAT */
+.chat-card{padding:0;overflow:hidden;min-height:590px;display:grid;grid-template-columns:285px 1fr}
+.chat-list{border-right:1px solid var(--line);padding:17px;background:#fff}
+.chat-search{margin-bottom:12px}
+.chat-search input{padding:10px 12px;font-size:12px;background:#f7f8fa;border-color:transparent}
+.chat-user{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--primary-soft)}
+.chat-mini{width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ffdce4;font-size:20px;flex:none}
+.chat-user b{font-size:13px}
+.chat-user span{display:block;margin-top:3px;color:#888;font-size:11px}
+.chat-area{display:flex;flex-direction:column;min-width:0}
+.chat-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);background:#fff}
+.chat-head b{font-size:14px}
+.chat-head small{display:block;color:#999;margin-top:2px}
+.messages{flex:1;min-height:420px;padding:20px;background:#fafafb;display:flex;flex-direction:column;gap:9px;overflow:auto}
+.time-label{text-align:center;color:#aaa;font-size:10px;margin:5px 0}
+.msg{max-width:72%;padding:11px 14px;border-radius:16px;line-height:1.45;font-size:13px}
+.msg.them{background:#fff;border:1px solid var(--line);border-top-left-radius:5px}
+.msg.me{margin-left:auto;background:var(--primary);color:#fff;border-top-right-radius:5px}
+.chat-input{display:flex;gap:8px;padding:13px;border-top:1px solid var(--line);background:#fff}
+.chat-input input{flex:1}
+
+/* ADMIN */
+.admin-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{padding:18px;border:1px solid var(--line);border-radius:17px;background:#fff}
+.kpi small{color:#888}
+.kpi strong{display:block;font-size:25px;margin-top:6px}
+.admin-card{padding:20px;overflow:auto}
+.table{width:100%;border-collapse:collapse;min-width:720px}
+.table th,.table td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}
+.table th{color:#8a8c95;font-weight:800;background:#fbfbfc}
+.status{display:inline-flex;padding:5px 8px;border-radius:999px;background:#eef8f3;color:var(--success);font-size:10px;font-weight:900}
+.status.wait{background:#fff6e7;color:#b77b23}
+.status.report{background:#fff0f0;color:#d05757}
+
+.toast{position:fixed;right:22px;bottom:22px;z-index:100;display:none;max-width:min(420px,calc(100vw - 44px));padding:13px 15px;border-radius:13px;background:#202127;color:#fff;box-shadow:0 14px 38px rgba(0,0,0,.2);font-size:13px}
+
+
+/* MEMBER AUTH */
+body:not(.authenticated) .app{display:none}
+body.authenticated .auth-gate{display:none}
+.auth-gate{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255,92,122,.10), transparent 30%),
+    radial-gradient(circle at 100% 20%, rgba(124,108,255,.08), transparent 25%),
+    var(--bg);
+}
+.auth-shell{width:min(440px,100%)}
+.auth-brand{text-align:center;margin-bottom:18px}
+.auth-brand .mark{width:58px;height:58px;border-radius:20px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),#ff8aa1);color:#fff;font-size:30px;box-shadow:0 14px 30px rgba(255,92,122,.24)}
+.auth-brand h1{margin:0;font-size:34px;letter-spacing:-1.5px}.auth-brand h1 span{color:var(--primary)}
+.auth-brand p{margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.auth-card{padding:26px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow)}
+.auth-card h2{font-size:23px;margin:0 0 7px;letter-spacing:-.8px}
+.auth-card .desc{margin:0 0 19px;color:#777;font-size:13px;line-height:1.55}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:#f4f5f7;border-radius:14px;margin-bottom:18px}
+.auth-tab{border:0;background:transparent;padding:10px;border-radius:10px;color:#777;font-weight:900}
+.auth-tab.active{background:#fff;color:var(--text);box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.auth-field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.auth-field label{font-size:12px;font-weight:900;color:#555}
+.auth-submit{width:100%;margin-top:4px;padding:13px 16px}
+.auth-message{min-height:20px;margin-top:11px;font-size:12px;line-height:1.5;color:#777}
+.auth-message.error{color:var(--danger);font-weight:800}.auth-message.success{color:var(--success);font-weight:800}
+.account-bar{display:flex;justify-content:flex-end;align-items:center;gap:9px;margin-bottom:14px}
+.account-email{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#777;padding:8px 11px;border:1px solid var(--line);border-radius:999px;background:#fff}
+.account-bar .btn{padding:8px 11px;font-size:11px}
+@media(max-width:640px){.account-bar{justify-content:space-between}.account-email{max-width:220px}.auth-card{padding:22px}.auth-brand h1{font-size:30px}}
+
+/* ADMIN ACCESS */
+.nav button[data-page="admin"]{display:none}
+body.admin-mode .nav button[data-page="admin"]{display:flex}
+.admin-modal-backdrop{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(16,18,24,.56);backdrop-filter:blur(7px)}
+.admin-modal-backdrop.show{display:flex}
+.admin-login-card{width:min(420px,100%);padding:28px;border-radius:22px;background:#fff;box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.admin-login-icon{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;margin-bottom:17px;background:var(--primary-soft);color:var(--primary);font-size:23px;font-weight:900}
+.admin-login-card h3{margin:0 0 7px;font-size:24px;letter-spacing:-.8px}
+.admin-login-card p{margin:0 0 18px;color:#777;line-height:1.6;font-size:13px}
+.admin-login-card input{margin-bottom:10px}
+.admin-login-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:4px}
+.admin-login-error{min-height:18px;margin-top:9px;color:#d05757;font-size:12px;font-weight:700}
+.admin-top-actions{display:flex;align-items:center;gap:8px}
+.mobile-brand{display:none}
+
+@media(max-width:950px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;padding:8px 10px;border-right:0;border-top:1px solid var(--line);z-index:50}
+  .brand,.side-card{display:none}
+  .nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin:0}
+  body.admin-mode .nav{grid-template-columns:repeat(6,1fr)}
+  .nav button{padding:8px 4px;justify-content:center;flex-direction:column;gap:2px;font-size:9px;border-radius:11px}
+  .nav button .icon{font-size:18px}
+  .main{padding:22px 18px 88px}
+  .mobile-brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .mobile-brand b{font-size:23px;letter-spacing:-1px}.mobile-brand b span{color:var(--primary)}
+  .hero,.layout-2,.discover-grid{grid-template-columns:1fr}
+  .preview-card{position:static}
+  .hero-main{min-height:480px}
+  .hero-main h2{font-size:41px}
+  .chat-card{grid-template-columns:230px 1fr}
+}
+@media(max-width:640px){
+  .main{padding:18px 14px 84px}
+  .topbar{align-items:center}
+  .title h1{font-size:25px}.title p{font-size:13px}
+  .topbar .pill{display:none}
+  .hero-main{padding:28px;min-height:515px}
+  .hero-main h2{font-size:36px;letter-spacing:-1.7px;margin-top:19px}
+  .hero-main p{font-size:14px}
+  .hero-foot{left:28px;right:28px;bottom:27px;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .hero-stat{padding:10px}.hero-stat b{font-size:14px}.hero-stat span{font-size:9px}
+  .form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+  .preview-photo,.person-photo{height:330px}
+  .info-grid{grid-template-columns:1fr 1fr 1fr}
+  .chat-card{grid-template-columns:1fr}.chat-list{display:none}
+  .admin-kpis{grid-template-columns:1fr 1fr}
+  .nav{grid-template-columns:repeat(5,1fr)}
+  body.admin-mode .nav{grid-template-columns:repeat(6,1fr)}
+}
+
+/* APPROVAL FLOW */
+.approval-note{
+  margin:0 0 18px;padding:14px 16px;border-radius:15px;
+  border:1px solid #f2dfb9;background:#fff9ec;color:#745b2f;
+  font-size:13px;line-height:1.6;
+}
+.approval-note.approved{border-color:#cfe9dc;background:#f2fbf6;color:#267650}
+.approval-note.rejected{border-color:#f2cccc;background:#fff3f3;color:#a84242}
+.member-action-group{display:flex;gap:6px;flex-wrap:wrap}
+.member-action-group .btn{padding:7px 9px;font-size:10px;border-radius:10px}
+.status.rejected{background:#fff0f0;color:#d05757}
+.status.pending{background:#fff6e7;color:#b77b23}
+@media(max-width:640px){
+  .account-bar{flex-wrap:wrap}
+  #approvalBadge{order:3}
+}
+
+</style>
+</head>
+<body>
+<div class="auth-gate" id="authGate">
+  <div class="auth-shell">
+    <div class="auth-brand">
+      <div class="mark">♡</div>
+      <h1>Near<span>U</span></h1>
+      <p>처음의 설렘, 가벼운 대화로 시작해볼까요?</p>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" type="button" onclick="setAuthMode('login')">로그인</button>
+        <button class="auth-tab" id="signupTab" type="button" onclick="setAuthMode('signup')">회원가입</button>
+      </div>
+      <h2 id="authTitle">다시 만나서 반가워요</h2>
+      <p class="desc" id="authDesc">이메일과 비밀번호로 로그인해 주세요.</p>
+      <div class="auth-field">
+        <label>이메일</label>
+        <input id="authEmail" type="email" placeholder="name@example.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label>비밀번호</label>
+        <input id="authPassword" type="password" placeholder="6자 이상" autocomplete="current-password" onkeydown="if(event.key==='Enter') submitAuth()">
+      </div>
+      <button class="btn primary auth-submit" id="authSubmit" type="button" onclick="submitAuth()">로그인</button>
+      <div class="auth-message" id="authMessage"></div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">♡</div>
+      <div class="brand-copy">
+        <strong>Near<span>U</span></strong>
+        <small>직장인 지역 매칭</small>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="active" data-page="home"><span class="icon">⌂</span><span>시작</span></button>
+      <button data-page="profile"><span class="icon">☺</span><span>내 프로필</span></button>
+      <button data-page="discover"><span class="icon">♡</span><span>오늘의 소개</span></button>
+      <button data-page="match"><span class="icon">✦</span><span>매칭</span></button>
+      <button data-page="chat"><span class="icon">◌</span><span>채팅</span></button>
+      <button data-page="admin"><span class="icon">⚙</span><span>관리자</span></button>
+    </nav>
+
+    <div class="side-card">
+      <b>NearU Demo</b>
+      이 파일은 화면 흐름을 확인하는 MVP입니다. 실제 운영 시 본인인증, DB, 신고/차단, 실시간 채팅 연결이 필요합니다.
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="account-bar">
+      <span class="account-email" id="accountEmail">로그인 중</span>
+      <span class="status wait" id="approvalBadge">승인 확인 중</span>
+      <button class="btn ghost" type="button" onclick="memberLogout()">로그아웃</button>
+    </div>
+    <div class="mobile-brand"><b>Near<span>U</span></b><span class="pill"><span class="dot"></span> 데모 서비스</span></div>
+
+    <!-- HOME -->
+    <section id="home" class="page active">
+      <div class="topbar">
+        <div class="title">
+          <h1>새로운 인연, 가볍게 시작해요</h1>
+          <p>가까운 곳에서 일하는 사람과 자연스럽게 만나보세요.</p>
+        </div>
+        <div class="pill"><span class="dot"></span> NearU Beta</div>
+      </div>
+
+      <div class="hero">
+        <div class="card hero-main">
+          <span class="eyebrow">오늘, 새로운 인연을 만나보세요</span>
+          <h2>처음의 설렘,<br>가벼운 대화로 시작해볼까요?</h2>
+          <p>
+            가까운 곳에서 일하는 사람과 부담 없이 인사하고,
+            천천히 서로를 알아가보세요.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary" onclick="go('profile')">내 프로필 만들기</button>
+            <button class="btn dark" onclick="go('discover')">오늘의 소개 보기</button>
+          </div>
+
+          <div class="hero-foot">
+            <div class="hero-stat"><b>가까운 인연</b><span>생활권 중심 소개</span></div>
+            <div class="hero-stat"><b>서로의 관심</b><span>마음이 통하면 매칭</span></div>
+            <div class="hero-stat"><b>편한 대화</b><span>부담 없이 알아가기</span></div>
+          </div>
+        </div>
+
+        <div class="card hero-side">
+          <h3>NearU는 이렇게 시작해요</h3>
+          <div class="flow-step"><div class="flow-num">1</div><div><b>나를 간단히 소개해요</b><span>사진과 취향, 생활권을 입력해요</span></div></div>
+          <div class="flow-step"><div class="flow-num">2</div><div><b>새로운 사람을 만나봐요</b><span>서로의 프로필을 천천히 확인해요</span></div></div>
+          <div class="flow-step"><div class="flow-num">3</div><div><b>마음이 통하면 대화해요</b><span>서로 관심을 표현하면 채팅이 열려요</span></div></div>
+          <div class="trust-note">편안한 만남을 위해 실제 운영 시 본인확인과 신고·차단 기능을 함께 구성할 예정입니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile" class="page">
+      <div class="topbar">
+        <div class="title"><h1>내 프로필</h1><p>처음부터 너무 많은 정보를 받지 않고, 소개에 필요한 핵심만 입력합니다.</p></div>
+        <div class="pill">프로필 완성도 <b id="profilePercent">70%</b></div>
+      </div>
+
+      <div class="layout-2">
+        <div class="card form-card">
+          <div class="section-head"><h3>기본 정보</h3><span>필수 정보 위주</span></div>
+          <div class="form-grid">
+            <div class="field full">
+              <label>대표 사진</label>
+              <div class="upload-box">
+                <div class="upload-thumb" id="uploadThumb">🙂</div>
+                <div>
+                  <button class="btn ghost" type="button" onclick="document.getElementById('photoInput').click()">사진 선택</button>
+                  <input id="photoInput" type="file" accept="image/*" hidden onchange="previewPhoto(event)" />
+                  <small>선택한 사진은 현재 브라우저 화면에서만 미리보기 됩니다.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="field"><label>닉네임</label><input id="nickname" value="동찬" oninput="livePreview()" /></div>
+            <div class="field"><label>출생연도</label><select id="birth" onchange="livePreview()"><option>1996</option><option>1997</option><option selected>1998</option><option>1999</option><option>2000</option><option>2001</option></select></div>
+            <div class="field"><label>성별</label><select id="gender"><option>남성</option><option>여성</option></select></div>
+            <div class="field"><label>키</label><input id="height" value="175cm" oninput="livePreview()" /></div>
+            <div class="field"><label>직업</label><input id="job" value="건축 설계" oninput="livePreview()" /></div>
+            <div class="field"><label>근무지역</label><select id="workarea" onchange="livePreview()"><option selected>문정</option><option>잠실</option><option>강남</option><option>판교</option><option>성수</option></select></div>
+            <div class="field"><label>MBTI</label><input id="mbti" value="ENTP" maxlength="4" oninput="livePreview()" /></div>
+            <div class="field"><label>흡연 / 음주</label><input id="life" value="비흡연 / 가끔" oninput="livePreview()" /></div>
+
+            <div class="field full">
+              <label>관심사</label>
+              <div class="interest-wrap">
+                <input class="interest-check" id="i1" type="checkbox" checked><label class="interest-label" for="i1">맛집</label>
+                <input class="interest-check" id="i2" type="checkbox" checked><label class="interest-label" for="i2">방탈출</label>
+                <input class="interest-check" id="i3" type="checkbox"><label class="interest-label" for="i3">전시</label>
+                <input class="interest-check" id="i4" type="checkbox"><label class="interest-label" for="i4">카페</label>
+                <input class="interest-check" id="i5" type="checkbox"><label class="interest-label" for="i5">드라이브</label>
+                <input class="interest-check" id="i6" type="checkbox"><label class="interest-label" for="i6">게임</label>
+              </div>
+            </div>
+
+            <div class="field full"><label>한 줄 소개</label><textarea id="intro" oninput="livePreview()">퇴근 후 맛집이나 방탈출 같이 가볍게 즐기는 걸 좋아해요.</textarea></div>
+          </div>
+
+          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:17px">
+            <button class="btn primary" onclick="saveProfile()">저장하고 소개 보기</button>
+            <button class="btn ghost" onclick="toast('실서비스에서는 회사메일, 사원증 또는 별도 인증업체 연동을 고려할 수 있습니다.')">직장인 인증</button>
+          </div>
+        </div>
+
+        <aside class="card preview-card">
+          <div class="preview-photo" id="previewPhoto">🙂</div>
+          <h2 id="previewName">동찬, 28</h2>
+          <div class="preview-sub" id="previewJob">건축 설계 · 문정 · 175cm</div>
+          <div class="tags">
+            <span class="tag" id="previewMbti">ENTP</span>
+            <span class="tag" id="previewLife">비흡연 / 가끔</span>
+            <span class="tag">직장인 인증 예정</span>
+          </div>
+          <p class="preview-intro" id="previewIntro">퇴근 후 맛집이나 방탈출 같이 가볍게 즐기는 걸 좋아해요.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- DISCOVER -->
+    <section id="discover" class="page">
+      <div class="topbar">
+        <div class="title"><h1>오늘의 소개</h1><p>하루에 너무 많은 사람을 보여주기보다, 조건에 맞는 사람을 적게 추천하는 구조입니다.</p></div>
+        <div class="pill">오늘 <b><span id="cardCount">1</span> / 3</b></div>
+      </div>
+
+      <div class="discover-grid">
+        <div class="card person-card">
+          <div class="person-photo" id="personEmoji">
+            👩🏻
+            <span class="online-chip">오늘 활동</span>
+            <span class="match-score" id="matchScore">추천도 92%</span>
+          </div>
+          <div class="person-body">
+            <div class="person-title-row">
+              <h2 id="personName">수아, 29</h2>
+              <span class="verify">✓ 직장인 인증</span>
+            </div>
+            <div class="tags">
+              <span class="tag" id="personJob">마케팅</span>
+              <span class="tag" id="personArea">잠실</span>
+              <span class="tag" id="personMbti">ENFP</span>
+            </div>
+            <p id="personIntro">퇴근 후 전시 보거나 새로운 맛집 찾아다니는 걸 좋아해요.</p>
+
+            <div class="info-grid">
+              <div class="info-box"><small>거리</small><b id="personDistance">약 3.2km</b></div>
+              <div class="info-box"><small>공통 관심사</small><b id="personCommon">맛집 · 전시</b></div>
+              <div class="info-box"><small>생활 패턴</small><b id="personLife">비흡연</b></div>
+            </div>
+
+            <div class="actions">
+              <button class="pass" onclick="nextPerson(false)">다음 소개</button>
+              <button class="like" onclick="nextPerson(true)">관심 보내기 ♡</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="discover-side">
+          <div class="card side-section">
+            <h3>현재 추천 기준</h3>
+            <div class="recommend-row"><span>생활권</span><b>문정 · 잠실 우선</b></div>
+            <div class="recommend-row"><span>선호 연령</span><b>26 ~ 31세</b></div>
+            <div class="recommend-row"><span>인증 상태</span><b>직장인 인증 우선</b></div>
+            <div class="recommend-row"><span>노출 방식</span><b>하루 3명</b></div>
+          </div>
+          <div class="tip">💡 <b>NearU 포인트</b><br>가까운 생활권과 취향이 비슷한 사람을 중심으로 자연스럽게 소개하는 컨셉입니다.</div>
+          <div class="card side-section">
+            <h3>오늘의 이용 현황</h3>
+            <div class="recommend-row"><span>남은 소개</span><b id="remainingCount">2명</b></div>
+            <div class="recommend-row"><span>보낸 관심</span><b id="likeCount">0회</b></div>
+            <div class="recommend-row"><span>새 매칭</span><b id="newMatchCount">0건</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCH -->
+    <section id="match" class="page">
+      <div class="topbar">
+        <div class="title"><h1>매칭</h1><p>서로 관심을 표현한 경우에만 채팅방이 열립니다.</p></div>
+        <div class="pill">Mutual Like</div>
+      </div>
+
+      <div class="card match-card">
+        <div class="heart">💞</div>
+        <h2>서로 관심이 통했어요!</h2>
+        <p id="matchText">수아님과 매칭되었습니다. 먼저 가볍게 인사해보세요.</p>
+        <div class="match-pair"><div class="match-avatar">🙂</div><div class="match-avatar" id="matchAvatar">👩🏻</div></div>
+        <div class="match-hint">첫 대화는 “안녕하세요”에서 끝내기보다 프로필의 공통 관심사를 한 가지 언급하면 훨씬 자연스럽습니다.</div>
+        <div class="center-actions">
+          <button class="btn primary" onclick="go('chat')">채팅 시작</button>
+          <button class="btn ghost" onclick="go('discover')">다른 소개 보기</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat" class="page">
+      <div class="topbar">
+        <div class="title"><h1>채팅</h1><p>실서비스에서는 Firebase, Supabase 또는 별도 WebSocket 서버로 실시간 메시지를 연결할 수 있습니다.</p></div>
+        <div class="pill"><span class="dot"></span> 매칭된 사용자만 대화 가능</div>
+      </div>
+
+      <div class="card chat-card">
+        <aside class="chat-list">
+          <div class="chat-search"><input placeholder="매칭된 사람 검색" /></div>
+          <div class="chat-user">
+            <div class="chat-mini" id="chatListAvatar">👩🏻</div>
+            <div><b id="chatListName">수아</b><span>방금 매칭됨</span></div>
+          </div>
+        </aside>
+
+        <div class="chat-area">
+          <div class="chat-head">
+            <div><b id="chatHeadName">수아님과의 대화</b><small>직장인 인증 완료</small></div>
+            <button class="btn ghost" style="padding:8px 10px" onclick="toast('신고·차단 메뉴는 실제 운영 시 반드시 추가하는 편이 좋습니다.')">⋯</button>
+          </div>
+          <div class="messages" id="messages">
+            <div class="time-label">오늘</div>
+            <div class="msg them" id="firstThem">안녕하세요 :) 매칭됐네요!</div>
+            <div class="msg me">안녕하세요! 반가워요 😄</div>
+          </div>
+          <div class="chat-input">
+            <input id="chatInput" placeholder="메시지를 입력하세요" onkeydown="if(event.key==='Enter') sendMessage()" />
+            <button class="btn primary" onclick="sendMessage()">전송</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="admin" class="page">
+      <div class="topbar">
+        <div class="title">
+          <h1>회원 승인 관리</h1>
+          <p>가입한 회원의 프로필을 확인하고 직접 승인 또는 보류할 수 있습니다.</p>
+        </div>
+        <div class="admin-top-actions">
+          <div class="pill">Supabase Admin</div>
+          <button class="btn ghost" onclick="loadAdminMembers()">새로고침</button>
+        </div>
+      </div>
+
+      <div class="admin-kpis">
+        <div class="kpi"><small>전체 회원</small><strong id="kpiTotal">0</strong></div>
+        <div class="kpi"><small>승인 대기</small><strong id="kpiPending">0</strong></div>
+        <div class="kpi"><small>승인 완료</small><strong id="kpiApproved">0</strong></div>
+        <div class="kpi"><small>보류</small><strong id="kpiRejected">0</strong></div>
+      </div>
+
+      <div class="card admin-card">
+        <div class="section-head">
+          <h3>회원 검수 목록</h3>
+          <span id="adminLoadState">Supabase에서 불러옵니다</span>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>가입일</th>
+              <th>이메일</th>
+              <th>닉네임</th>
+              <th>성별</th>
+              <th>근무지역</th>
+              <th>직업</th>
+              <th>상태</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="adminMemberRows">
+            <tr><td colspan="8">회원 정보를 불러오는 중입니다.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://cqehvtkdrtnfnunouyov.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_xBzNd7xTlhHp4y9nrJqRMA_UKmn6KJ9';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let currentIsAdmin = false;
+let authMode = 'login';
+
+const people = [
+  {
+    emoji:'👩🏻', name:'수아, 29', shortName:'수아', job:'마케팅', area:'잠실', mbti:'ENFP', score:'92%',
+    distance:'약 3.2km', common:'맛집 · 전시', life:'비흡연',
+    intro:'퇴근 후 전시 보거나 새로운 맛집 찾아다니는 걸 좋아해요.'
+  },
+  {
+    emoji:'👩🏻‍💼', name:'지민, 28', shortName:'지민', job:'서비스 기획', area:'문정', mbti:'ISFJ', score:'88%',
+    distance:'약 1.4km', common:'카페 · 산책', life:'비흡연',
+    intro:'조용한 카페, 산책, 공연 보는 걸 좋아합니다. 천천히 알아가고 싶어요.'
+  },
+  {
+    emoji:'👩🏻‍🎨', name:'예린, 30', shortName:'예린', job:'디자이너', area:'강남', mbti:'INTJ', score:'81%',
+    distance:'약 8.6km', common:'전시 · 드라이브', life:'가끔 음주',
+    intro:'주말엔 전시나 드라이브를 자주 해요. 대화가 잘 통하는 사람이 좋아요.'
+  }
+];
+
+let currentPerson = 0;
+let sentLikes = 0;
+let matchedPerson = people[0];
+let toastTimer;
+let photoDataUrl = '';
+
+const pages = document.querySelectorAll('.page');
+const navButtons = document.querySelectorAll('.nav button');
+navButtons.forEach(btn => btn.addEventListener('click', () => go(btn.dataset.page)));
+
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById('loginTab').classList.toggle('active', mode === 'login');
+  document.getElementById('signupTab').classList.toggle('active', mode === 'signup');
+  document.getElementById('authTitle').textContent = mode === 'login' ? '다시 만나서 반가워요' : 'NearU에 처음 오셨나요?';
+  document.getElementById('authDesc').textContent = mode === 'login'
+    ? '이메일과 비밀번호로 로그인해 주세요.'
+    : '회원가입 후 프로필을 작성하면 관리자 승인 대기 상태가 됩니다.';
+  document.getElementById('authSubmit').textContent = mode === 'login' ? '로그인' : '회원가입';
+  document.getElementById('authPassword').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+  setAuthMessage('');
+}
+
+function setAuthMessage(message, type=''){
+  const el = document.getElementById('authMessage');
+  el.textContent = message;
+  el.className = 'auth-message' + (type ? ' ' + type : '');
+}
+
+async function submitAuth(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  if(!email || !password){ setAuthMessage('이메일과 비밀번호를 모두 입력해 주세요.', 'error'); return; }
+  if(password.length < 6){ setAuthMessage('비밀번호는 6자 이상 입력해 주세요.', 'error'); return; }
+
+  const button = document.getElementById('authSubmit');
+  button.disabled = true;
+  setAuthMessage(authMode === 'login' ? '로그인 중...' : '계정을 만드는 중...');
+
+  try{
+    if(authMode === 'login'){
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if(error) throw error;
+      if(data.user) await applyAuthenticatedUser(data.user);
+    }else{
+      const redirectTo = location.protocol.startsWith('http') ? location.origin + location.pathname : undefined;
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: redirectTo ? { emailRedirectTo: redirectTo } : undefined
+      });
+      if(error) throw error;
+
+      if(data.session && data.user){
+        await applyAuthenticatedUser(data.user);
+        toast('회원가입이 완료되었습니다. 프로필을 작성해 주세요.');
+        go('profile');
+      }else{
+        setAuthMode('login');
+        document.getElementById('authEmail').value = email;
+        setAuthMessage('가입 완료! 이메일 인증 후 로그인해 주세요.', 'success');
+      }
+    }
+  }catch(err){
+    const msg = String(err?.message || err || '오류가 발생했습니다.');
+    const lower = msg.toLowerCase();
+    const translated =
+      lower.includes('invalid login credentials') ? '이메일 또는 비밀번호가 올바르지 않습니다.' :
+      lower.includes('email not confirmed') ? '먼저 이메일 인증을 완료해 주세요.' :
+      lower.includes('user already registered') ? '이미 가입된 이메일입니다. 로그인해 주세요.' : msg;
+    setAuthMessage(translated, 'error');
+  }finally{
+    button.disabled = false;
+  }
+}
+
+async function applyAuthenticatedUser(user){
+  currentUser = user;
+  document.body.classList.add('authenticated');
+  document.getElementById('accountEmail').textContent = user.email || '회원';
+  setAuthMessage('');
+
+  await checkAdmin();
+  await loadMemberProfile();
+  updateApprovalUI();
+
+  const params = new URLSearchParams(location.search);
+  if(params.get('admin') === '1' && currentIsAdmin){
+    go('admin');
+  }
+}
+
+async function memberLogout(){
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  currentIsAdmin = false;
+  document.body.classList.remove('authenticated','admin-mode');
+  document.getElementById('authPassword').value = '';
+  setAuthMode('login');
+  setAuthMessage('로그아웃되었습니다.', 'success');
+}
+
+async function initMemberAuth(){
+  try{
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if(session?.user) await applyAuthenticatedUser(session.user);
+  }catch(e){
+    setAuthMessage('Supabase 연결을 확인해 주세요.', 'error');
+  }
+}
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_OUT'){
+    currentUser = null;
+    currentProfile = null;
+    currentIsAdmin = false;
+    document.body.classList.remove('authenticated','admin-mode');
+  }
+});
+
+async function checkAdmin(){
+  currentIsAdmin = false;
+  document.body.classList.remove('admin-mode');
+
+  try{
+    const { data, error } = await supabaseClient.rpc('is_admin');
+    if(error) throw error;
+    currentIsAdmin = data === true;
+    document.body.classList.toggle('admin-mode', currentIsAdmin);
+  }catch(e){
+    console.warn('Admin check failed:', e);
+  }
+}
+
+function approvalLabel(status){
+  if(status === 'approved') return '승인 완료';
+  if(status === 'rejected') return '승인 보류';
+  return '승인 대기';
+}
+
+function updateApprovalUI(){
+  const status = currentProfile?.approval_status || 'pending';
+  const badge = document.getElementById('approvalBadge');
+  const notice = document.getElementById('approvalNotice');
+
+  if(badge){
+    badge.textContent = currentIsAdmin ? '관리자' : approvalLabel(status);
+    badge.className = 'status ' + (currentIsAdmin || status === 'approved' ? '' : status === 'rejected' ? 'rejected' : 'wait');
+  }
+
+  if(notice){
+    if(currentIsAdmin){
+      notice.className = 'approval-note approved';
+      notice.textContent = '관리자 계정입니다. 회원 승인 관리 메뉴를 사용할 수 있습니다.';
+    }else if(status === 'approved'){
+      notice.className = 'approval-note approved';
+      notice.textContent = '관리자 승인이 완료되었습니다. 오늘의 소개, 매칭, 채팅을 이용할 수 있습니다.';
+    }else if(status === 'rejected'){
+      notice.className = 'approval-note rejected';
+      notice.textContent = '현재 승인이 보류된 상태입니다. 프로필 내용을 확인한 뒤 운영자에게 문의해 주세요.';
+    }else{
+      notice.className = 'approval-note';
+      notice.textContent = '프로필 저장 후 관리자 승인을 기다려 주세요. 승인 전에는 소개·매칭·채팅 이용이 제한됩니다.';
+    }
+  }
+}
+
+function canUseMatching(){
+  return currentIsAdmin || currentProfile?.approval_status === 'approved';
+}
+
+function go(page){
+  if(page === 'admin'){
+    if(!currentIsAdmin){
+      toast('관리자 계정만 접근할 수 있습니다.');
+      return;
+    }
+    showPage('admin');
+    loadAdminMembers();
+    return;
+  }
+
+  if(['discover','match','chat'].includes(page) && !canUseMatching()){
+    toast('관리자 승인 후 이용할 수 있습니다.');
+    showPage('profile');
+    return;
+  }
+
+  showPage(page);
+}
+
+function showPage(page){
+  pages.forEach(p => p.classList.remove('active'));
+  navButtons.forEach(b => b.classList.remove('active'));
+  const target = document.getElementById(page);
+  if(!target) return;
+  target.classList.add('active');
+  const nav = [...navButtons].find(b => b.dataset.page === page);
+  if(nav) nav.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function calcAge(year){
+  return new Date().getFullYear() - Number(year);
+}
+
+function livePreview(){
+  const nick = document.getElementById('nickname').value.trim() || '사용자';
+  const birth = document.getElementById('birth').value;
+  const job = document.getElementById('job').value.trim() || '직업 미입력';
+  const area = document.getElementById('workarea').value;
+  const height = document.getElementById('height').value.trim();
+  const mbti = document.getElementById('mbti').value.trim().toUpperCase() || 'MBTI';
+  const life = document.getElementById('life').value.trim() || '생활정보';
+  const intro = document.getElementById('intro').value.trim() || '한 줄 소개를 입력해 주세요.';
+
+  document.getElementById('previewName').textContent = `${nick}, ${calcAge(birth)}`;
+  document.getElementById('previewJob').textContent = [job, area, height].filter(Boolean).join(' · ');
+  document.getElementById('previewMbti').textContent = mbti;
+  document.getElementById('previewLife').textContent = life;
+  document.getElementById('previewIntro').textContent = intro;
+
+  const filled = [nick,birth,job,area,height,mbti,life,intro].filter(Boolean).length;
+  document.getElementById('profilePercent').textContent = `${Math.min(100, 20 + filled * 10)}%`;
+}
+
+function previewPhoto(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    photoDataUrl = e.target.result;
+    document.getElementById('uploadThumb').innerHTML = `<img src="${photoDataUrl}" alt="대표 사진 미리보기">`;
+    document.getElementById('previewPhoto').innerHTML = `<img src="${photoDataUrl}" alt="프로필 사진 미리보기">`;
+    document.getElementById('profilePercent').textContent = '100%';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function loadMemberProfile(){
+  if(!currentUser) return;
+
+  try{
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    currentProfile = data || {
+      id: currentUser.id,
+      email: currentUser.email,
+      approval_status: 'pending'
+    };
+
+    const saved = currentProfile;
+    ['nickname','birth','gender','height','job','workarea','mbti','life','intro'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el && saved[id] !== null && saved[id] !== undefined && saved[id] !== '') el.value = saved[id];
+    });
+
+    livePreview();
+    updateApprovalUI();
+  }catch(e){
+    console.error(e);
+    toast('승인 DB 설정을 확인해 주세요.');
+  }
+}
+
+async function saveProfile(){
+  livePreview();
+  if(!currentUser){ toast('먼저 로그인해 주세요.'); return; }
+
+  const profile = {
+    nickname: document.getElementById('nickname').value.trim(),
+    birth: Number(document.getElementById('birth').value),
+    gender: document.getElementById('gender').value,
+    height: document.getElementById('height').value.trim(),
+    job: document.getElementById('job').value.trim(),
+    workarea: document.getElementById('workarea').value,
+    mbti: document.getElementById('mbti').value.trim().toUpperCase(),
+    life: document.getElementById('life').value.trim(),
+    intro: document.getElementById('intro').value.trim()
+  };
+
+  if(!profile.nickname || !profile.job || !profile.intro){
+    toast('닉네임, 직업, 한 줄 소개는 입력해 주세요.');
+    return;
+  }
+
+  try{
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .update(profile)
+      .eq('id', currentUser.id)
+      .select('*')
+      .single();
+
+    if(error) throw error;
+    currentProfile = data;
+    updateApprovalUI();
+
+    if(currentIsAdmin || currentProfile.approval_status === 'approved'){
+      toast('프로필을 저장했습니다.');
+    }else{
+      toast('프로필을 저장했습니다. 관리자 승인을 기다려 주세요.');
+    }
+  }catch(e){
+    console.error(e);
+    toast('프로필 저장에 실패했습니다. Supabase 설정을 확인해 주세요.');
+  }
+}
+
+async function loadAdminMembers(){
+  if(!currentIsAdmin) return;
+
+  const state = document.getElementById('adminLoadState');
+  const tbody = document.getElementById('adminMemberRows');
+  state.textContent = '불러오는 중...';
+  tbody.innerHTML = '<tr><td colspan="8">회원 정보를 불러오는 중입니다.</td></tr>';
+
+  try{
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('id,email,nickname,gender,workarea,job,approval_status,created_at')
+      .order('created_at', { ascending:false });
+
+    if(error) throw error;
+
+    const rows = data || [];
+    const counts = {
+      total: rows.length,
+      pending: rows.filter(x => x.approval_status === 'pending').length,
+      approved: rows.filter(x => x.approval_status === 'approved').length,
+      rejected: rows.filter(x => x.approval_status === 'rejected').length
+    };
+
+    document.getElementById('kpiTotal').textContent = counts.total;
+    document.getElementById('kpiPending').textContent = counts.pending;
+    document.getElementById('kpiApproved').textContent = counts.approved;
+    document.getElementById('kpiRejected').textContent = counts.rejected;
+
+    if(!rows.length){
+      tbody.innerHTML = '<tr><td colspan="8">가입한 회원이 없습니다.</td></tr>';
+      state.textContent = '0명';
+      return;
+    }
+
+    tbody.innerHTML = rows.map(row => {
+      const date = row.created_at ? new Date(row.created_at).toLocaleDateString('ko-KR') : '-';
+      const statusClass = row.approval_status === 'approved' ? '' : row.approval_status === 'rejected' ? 'rejected' : 'wait';
+      return `
+        <tr>
+          <td>${escapeHtml(date)}</td>
+          <td>${escapeHtml(row.email || '-')}</td>
+          <td>${escapeHtml(row.nickname || '미작성')}</td>
+          <td>${escapeHtml(row.gender || '-')}</td>
+          <td>${escapeHtml(row.workarea || '-')}</td>
+          <td>${escapeHtml(row.job || '-')}</td>
+          <td><span class="status ${statusClass}">${approvalLabel(row.approval_status)}</span></td>
+          <td>
+            <div class="member-action-group">
+              <button class="btn primary" onclick="setApproval('${row.id}','approved')">승인</button>
+              <button class="btn danger" onclick="setApproval('${row.id}','rejected')">보류</button>
+              <button class="btn ghost" onclick="setApproval('${row.id}','pending')">대기</button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+
+    state.textContent = `${rows.length}명`;
+  }catch(e){
+    console.error(e);
+    state.textContent = '불러오기 실패';
+    tbody.innerHTML = '<tr><td colspan="8">관리자 권한 또는 Supabase 설정을 확인해 주세요.</td></tr>';
+  }
+}
+
+async function setApproval(userId, status){
+  if(!currentIsAdmin) return;
+
+  try{
+    const { error } = await supabaseClient.rpc('admin_set_approval', {
+      target_user_id: userId,
+      new_status: status
+    });
+    if(error) throw error;
+
+    toast(status === 'approved' ? '회원 승인을 완료했습니다.' : status === 'rejected' ? '승인을 보류했습니다.' : '승인 대기 상태로 변경했습니다.');
+    await loadAdminMembers();
+
+    if(currentUser?.id === userId){
+      await loadMemberProfile();
+    }
+  }catch(e){
+    console.error(e);
+    toast('상태 변경에 실패했습니다.');
+  }
+}
+
+function escapeHtml(value){
+  return String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+
+function renderPerson(){
+  const p = people[currentPerson];
+  const emojiNode = document.getElementById('personEmoji');
+  if(emojiNode) emojiNode.childNodes[0].nodeValue = `\n            ${p.emoji}\n            `;
+  document.getElementById('personName').textContent = p.name;
+  document.getElementById('personJob').textContent = p.job;
+  document.getElementById('personArea').textContent = p.area;
+  document.getElementById('personMbti').textContent = p.mbti;
+  document.getElementById('personIntro').textContent = p.intro;
+  document.getElementById('personDistance').textContent = p.distance;
+  document.getElementById('personCommon').textContent = p.common;
+  document.getElementById('personLife').textContent = p.life;
+  document.getElementById('matchScore').textContent = `추천도 ${p.score}`;
+  document.getElementById('cardCount').textContent = currentPerson + 1;
+  document.getElementById('remainingCount').textContent = `${Math.max(0, people.length - (currentPerson + 1))}명`;
+}
+
+function nextPerson(liked){
+  if(!canUseMatching()){
+    toast('관리자 승인 후 이용할 수 있습니다.');
+    go('profile');
+    return;
+  }
+
+  const p = people[currentPerson];
+  if(liked){
+    sentLikes++;
+    document.getElementById('likeCount').textContent = `${sentLikes}회`;
+
+    if(currentPerson === 0){
+      matchedPerson = p;
+      document.getElementById('newMatchCount').textContent = '1건';
+      updateMatchUI();
+      toast('상대방도 관심을 표시했습니다. 매칭되었습니다!');
+      setTimeout(() => go('match'), 650);
+      return;
+    }
+    toast(`${p.shortName}님께 관심을 보냈습니다.`);
+  }else{
+    toast('다음 소개로 넘어갑니다.');
+  }
+
+  currentPerson++;
+  if(currentPerson >= people.length){
+    currentPerson = 0;
+    toast('오늘의 소개를 모두 확인했습니다. 데모에서는 다시 처음부터 보여드립니다.');
+  }
+  renderPerson();
+}
+
+function updateMatchUI(){
+  const p = matchedPerson;
+  document.getElementById('matchText').textContent = `${p.shortName}님과 매칭되었습니다. 먼저 가볍게 인사해보세요.`;
+  document.getElementById('matchAvatar').textContent = p.emoji;
+  document.getElementById('chatListAvatar').textContent = p.emoji;
+  document.getElementById('chatListName').textContent = p.shortName;
+  document.getElementById('chatHeadName').textContent = `${p.shortName}님과의 대화`;
+  document.getElementById('firstThem').textContent = `안녕하세요 :) ${p.common.split(' · ')[0]} 좋아하신다길래 반가웠어요!`;
+}
+
+function sendMessage(){
+  if(!canUseMatching()){
+    toast('관리자 승인 후 이용할 수 있습니다.');
+    return;
+  }
+
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+
+  const msgs = document.getElementById('messages');
+  const mine = document.createElement('div');
+  mine.className = 'msg me';
+  mine.textContent = text;
+  msgs.appendChild(mine);
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    const reply = document.createElement('div');
+    reply.className = 'msg them';
+    reply.textContent = '좋아요 :) 저도 편하게 이야기해보고 싶었어요!';
+    msgs.appendChild(reply);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 500);
+}
+
+function toast(text){
+  const el = document.getElementById('toast');
+  el.textContent = text;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.display = 'none', 2300);
+}
+
+renderPerson();
+updateMatchUI();
+initMemberAuth();
+</script>
+</body>
+</html>
